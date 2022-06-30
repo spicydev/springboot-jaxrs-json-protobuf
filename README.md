@@ -1,4 +1,4 @@
-# Multiple-MIME-types-Sample-Application
+# Multiple-MIME-types Example Using Custom JaxRS MessageBodyWriter
 Demo project to handle REST requests with Multiple MIME Types like json &amp; protobuf in the same API's.
 
 # Sample REST Resource:
