@@ -25,8 +25,8 @@ jobs:
     name: Build & Analyze
     runs-on: ubuntu-22.04
     permissions:
-      actions: read
-      contents: read
+      actions: write
+      contents: write
       security-events: write
 
     strategy:
@@ -39,8 +39,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Google Java Format
-      uses: axel-op/googlejavaformat-action@v3.6.0
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -64,6 +62,11 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt-hotspot'
+    # Format Code as per the standards    
+    - name: Google Java Format
+      uses: axel-op/googlejavaformat-action@v3.6.0   
+      
+    # Build App with Maven  
     - name: Build with Maven
       run: mvn clean package -e -B
 
