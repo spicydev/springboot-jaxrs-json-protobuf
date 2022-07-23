@@ -64,7 +64,9 @@ jobs:
         distribution: 'adopt-hotspot'
     # Format Code as per the standards    
     - name: Google Java Format
-      uses: axel-op/googlejavaformat-action@v3.6.0   
+      uses: axel-op/googlejavaformat-action@v3.6.0
+      with:
+        args: "--set-exit-if-changed"
       
     # Build App with Maven  
     - name: Build with Maven
