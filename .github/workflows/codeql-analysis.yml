@@ -39,6 +39,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        ref: $GITHUB_REF
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
