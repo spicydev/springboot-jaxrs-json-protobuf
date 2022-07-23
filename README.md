@@ -1,4 +1,4 @@
-# Custom-MIME-types Example Using Custom JaxRS MessageBodyWriter
+# REST api custom mime types utilizing JaxRS MessageBodyReaderWriter Specifications
 Demo project to handle REST requests with Multiple MIME Types like json &amp; protobuf in the same API's.
 
 # Sample REST Resource:
