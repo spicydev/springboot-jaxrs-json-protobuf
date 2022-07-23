@@ -12,6 +12,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
 
 @Path("/test")
@@ -25,30 +26,34 @@ public class TestResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response test() throws IOException {
-        ClientEndpointTest clientEndpointTest = new ClientEndpointTest("ws://localhost:8080/api/hello");
+        ClientWebsocketTest clientEndpointTest = new ClientWebsocketTest("ws://localhost:8080/api/hello");
         clientEndpointTest.sendMessage("Hello, World!");
         return Response.ok().entity("SUCCESS").build();
     }
 
     @GET
     @Path("/proto")
-    @Produces({MediaType.APPLICATION_JSON, MediaTypeExt.APPLICATION_X_PROTOBUF})
+    @Produces({MediaType.APPLICATION_JSON,
+            MediaTypeExt.APPLICATION_X_PROTOBUF})
     public Response testProto() {
 
         String accept = httpHeaders.getHeaderString(HttpHeaders.ACCEPT);
         if (accept.isEmpty() || MediaType.APPLICATION_JSON.equals(accept)) {
 
             Citizen john = new Citizen();
-            john.setId(1234478948);
+            john.setId(1234567890);
             john.setEmail("john.test@test.com");
             john.setName("John Test");
-
+            Citizen.Phone phone = new Citizen.Phone();
+            phone.setType(PersonBinding.Person.PhoneType.MOBILE);
+            phone.setNumber("761-672-7821");
+            john.setPhones(Collections.singletonList(phone));
             return Response.ok().entity(john).build();
 
         } else {
             var name = "John Test";
-            var id = 1234567890;
-            var email = "test@test.com";
+            Integer id = 1234567890;
+            var email = "john.test@test.com";
             var phone = "761-672-7821";
             var phoneTyp = PersonBinding.Person.PhoneType.MOBILE;
             PersonBinding.Person.Builder personBuilder =
@@ -61,6 +66,7 @@ public class TestResource {
                             = PersonBinding.Person.PhoneNumber.newBuilder();
                     phoneBuilder.setNumber(number);
                     Optional.ofNullable(phoneTyp).ifPresent(phoneBuilder::setType);
+                    personBuilder.addPhones(phoneBuilder.build());
             });
             return Response.ok()
                     .entity(personBuilder.build())
@@ -73,7 +79,7 @@ public class TestResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response createJson(Citizen citizen) {
-            logger.info("POST CITIZEN NAME: {}", citizen.getName());
+            logger.info("POST CITIZEN: {}", citizen);
             return Response.accepted().entity(citizen).build();
     }
 
@@ -82,7 +88,7 @@ public class TestResource {
     @Consumes(MediaTypeExt.APPLICATION_X_PROTOBUF)
     @Produces(MediaTypeExt.APPLICATION_X_PROTOBUF)
     public Response createProto(PersonBinding.Person john) {
-        logger.info("POST Person Name: {}", john.getName());
+        logger.info("POST Person: {}", john);
         return  Response.accepted().entity(john).build();
     }
 }

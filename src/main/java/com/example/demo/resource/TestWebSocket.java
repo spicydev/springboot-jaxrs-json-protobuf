@@ -11,9 +11,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 @ServerEndpoint("/hello")
-public class TestEndpoint {
+public class TestWebSocket {
 
-    private final static Logger logger = LoggerFactory.getLogger(TestEndpoint.class);
+    private final static Logger logger = LoggerFactory.getLogger(TestWebSocket.class);
 
     @OnOpen
     public void myOnOpen (Session session) {

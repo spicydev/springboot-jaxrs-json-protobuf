@@ -10,14 +10,14 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 @ClientEndpoint
-public class ClientEndpointTest {
+public class ClientWebsocketTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(ClientEndpointTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(ClientWebsocketTest.class);
 
     private MessageHandler messageHandler;
     private Session userSession=null;
 
-    public ClientEndpointTest(String endpoint)  {
+    public ClientWebsocketTest(String endpoint)  {
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, new URI("ws://localhost:8080/hello"));
