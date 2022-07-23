@@ -63,7 +63,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt-hotspot'
-      
+        cache: maven
     # Build App with Maven  
     - name: Build with Maven
       run: mvn clean package -e -B
