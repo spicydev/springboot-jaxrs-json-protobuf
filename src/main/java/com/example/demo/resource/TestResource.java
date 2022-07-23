@@ -12,6 +12,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Optional;
 
 @Path("/test")
 public class TestResource {
@@ -45,18 +46,25 @@ public class TestResource {
             return Response.ok().entity(john).build();
 
         } else {
-            PersonBinding.Person john =
-                    PersonBinding.Person.newBuilder()
-                            .setName("John Test")
-                            .setId(1234478948)
-                            .setEmail("john.test@test.com")
-                            .addPhones(
-                                    PersonBinding.Person.PhoneNumber.newBuilder()
-                                            .setNumber("761-672-7821")
-                                            .setType(PersonBinding.Person.PhoneType.MOBILE)
-                            )
-                            .build();
-            return Response.ok().entity(john).build();
+            var name = "John Test";
+            var id = 1234567890;
+            var email = "test@test.com";
+            var phone = "761-672-7821";
+            var phoneTyp = PersonBinding.Person.PhoneType.MOBILE;
+            PersonBinding.Person.Builder personBuilder =
+                    PersonBinding.Person.newBuilder();
+            Optional.ofNullable(name).ifPresent(personBuilder::setName);
+            Optional.ofNullable(id).ifPresent(personBuilder::setId);
+            Optional.ofNullable(email).ifPresent(personBuilder::setEmail);
+            Optional.ofNullable(phone).ifPresent(number -> {
+                    PersonBinding.Person.PhoneNumber.Builder phoneBuilder
+                            = PersonBinding.Person.PhoneNumber.newBuilder();
+                    phoneBuilder.setNumber(number);
+                    Optional.ofNullable(phoneTyp).ifPresent(phoneBuilder::setType);
+            });
+            return Response.ok()
+                    .entity(personBuilder.build())
+                    .build();
         }
     }
 
