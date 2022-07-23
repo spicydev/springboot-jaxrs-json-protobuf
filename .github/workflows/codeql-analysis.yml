@@ -30,7 +30,7 @@ jobs:
       security-events: write
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         language: [ 'java' ]
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
@@ -66,7 +66,7 @@ jobs:
     - name: Google Java Format
       uses: axel-op/googlejavaformat-action@v3.6.0
       with:
-        args: "--set-exit-if-changed"
+        args: "--replace"
       
     # Build App with Maven  
     - name: Build with Maven
