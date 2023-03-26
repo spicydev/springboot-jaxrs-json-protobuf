@@ -4,7 +4,7 @@ import com.example.demo.resource.TestResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
 
-import javax.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ApplicationPath;
 import java.util.HashSet;
 import java.util.Set;
 
