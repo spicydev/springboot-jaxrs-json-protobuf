@@ -3,8 +3,11 @@ package com.example.demo.resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.websocket.CloseReason;
+import jakarta.websocket.OnError;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
+import jakarta.websocket.OnClose;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 import java.nio.ByteBuffer;
@@ -26,4 +29,13 @@ public class TestWebSocket {
         logger.info("Websocket Received data: {}", StandardCharsets.UTF_8.decode(buffer));
     }
 
+    @OnClose
+    public void myOnClose(Session session, CloseReason closeReason) {
+        logger.info("Websocket session closed for ID: {} - Reason: {}", session.getId(), closeReason);
+    }
+
+    @OnError
+    public void myOnError(Session session, Throwable throwable) {
+        logger.error("Websocket error for ID: {} - Error: {}", session.getId(), throwable.getMessage(), throwable);
+    }
 }
