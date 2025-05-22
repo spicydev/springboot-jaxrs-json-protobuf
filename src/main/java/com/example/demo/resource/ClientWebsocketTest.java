@@ -16,18 +16,19 @@ public class ClientWebsocketTest implements AutoCloseable {
 
     private final static Logger logger = LoggerFactory.getLogger(ClientWebsocketTest.class);
 
+    private String endpointUri;
     private Session userSession=null;
 
     public ClientWebsocketTest(String endpoint)  {
-        try {
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            container.connectToServer(this, new URI(endpoint));
-        } catch (DeploymentException | IOException | URISyntaxException e) {
-            logger.error("Error connecting to WebSocket endpoint: {}", endpoint, e);
-            throw new RuntimeException("Failed to connect to WebSocket: " + endpoint, e);
-        }
+        this.endpointUri = endpoint;
     }
 
+    public void connect() throws DeploymentException, IOException, URISyntaxException {
+        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+        container.connectToServer(this, new URI(this.endpointUri));
+        // Catch block from original constructor is not needed here as per instructions,
+        // the method signature declares the exceptions to be handled by the caller.
+    }
 
     @OnOpen
     public void myClientOpen(Session session) {
