@@ -20,11 +20,15 @@ public class TestController {
     private final static Logger logger = LoggerFactory.getLogger(TestController.class);
 
     @GetMapping(produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> test() throws IOException {
+    public ResponseEntity<String> test() {
         try (ClientWebsocketTest clientEndpointTest = new ClientWebsocketTest("ws://localhost:8080/hello")) {
+            clientEndpointTest.connect(); // New call
             clientEndpointTest.sendMessage("Hello, World!");
+            return ResponseEntity.ok("SUCCESS");
+        } catch (Exception e) { // Catch DeploymentException, IOException, URISyntaxException
+            logger.error("Error during WebSocket client test", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("WebSocket test failed: " + e.getMessage());
         }
-        return ResponseEntity.ok("SUCCESS");
     }
 
     @GetMapping(path = "/proto", produces = { MediaType.APPLICATION_JSON_VALUE, "application/x-protobuf" })
