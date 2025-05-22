@@ -4,7 +4,6 @@ package com.example.demo.resource.pojo;
 import com.example.demo.resource.model.PersonBinding;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Citizen {
 
@@ -31,19 +30,6 @@ public class Citizen {
 
         public void setNumber(String number) {
             this.number = number;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Phone phone = (Phone) o;
-            return type == phone.type && Objects.equals(number, phone.number);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(type, number);
         }
     }
 
@@ -87,18 +73,5 @@ public class Citizen {
                 ", email='" + email + '\'' +
                 ", phones=" + phones +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Citizen citizen = (Citizen) o;
-        return id == citizen.id && Objects.equals(name, citizen.name) && Objects.equals(email, citizen.email) && Objects.equals(phones, citizen.phones);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, id, email, phones);
     }
 }
