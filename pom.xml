@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.5</version>
+		<version>3.2.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
-			<version>4.31.0</version>
+			<version>3.25.3</version>
 		</dependency>
 	</dependencies>
 
@@ -64,13 +64,32 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<protocArtifact>com.google.protobuf:protoc:4.31.0</protocArtifact>
 							<inputDirectories>
 								src/main/java/com/example/demo/resource/proto
 							</inputDirectories>
 							<outputTargets>
 								<outputTarget><type>java</type></outputTarget>
 							</outputTargets>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-proto-classes</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>src/main/java/com/example/demo/resource/model</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/target/generated-sources/com/example/demo/resource/model</directory>
+								</resource>
+							</resources>
 						</configuration>
 					</execution>
 				</executions>

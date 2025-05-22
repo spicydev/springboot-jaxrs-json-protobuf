@@ -20,11 +20,11 @@ import java.lang.reflect.Type;
 @Produces(MediaTypeExt.APPLICATION_X_PROTOBUF)
 public class ProtoMessageWriter implements MessageBodyWriter<PersonBinding.Person> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ProtoMessageWriter.class);
+    private final static Logger logger = LoggerFactory.getLogger(ProtoMessageReader.class);
 
     @Override
     public boolean isWriteable(Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType) {
-        return aClass == PersonBinding.Person.class && mediaType.isCompatible(MediaType.valueOf(MediaTypeExt.APPLICATION_X_PROTOBUF));
+        return aClass == PersonBinding.Person.class;
     }
 
     @Override

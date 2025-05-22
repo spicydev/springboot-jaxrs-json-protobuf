@@ -13,8 +13,11 @@ import java.util.Set;
 public class JaxRsConf extends ResourceConfig {
 
     public JaxRsConf() {
-        register(TestResource.class);
-        register(ProtoMessageWriter.class);
-        register(ProtoMessageReader.class);
+        Set<Class<?>> classes = new HashSet<>();
+        classes.add(TestResource.class);
+        classes.add(ProtoMessageWriter.class);
+        classes.add(ProtoMessageReader.class);
+        registerClasses(classes);
+
     }
 }
