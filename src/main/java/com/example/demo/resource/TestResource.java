@@ -26,7 +26,7 @@ public class TestResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response test() throws IOException {
-        ClientWebsocketTest clientEndpointTest = new ClientWebsocketTest("ws://localhost:8080/api/hello");
+        ClientWebsocketTest clientEndpointTest = new ClientWebsocketTest("ws://localhost:8080/hello");
         clientEndpointTest.sendMessage("Hello, World!");
         return Response.ok().entity("SUCCESS").build();
     }
@@ -58,16 +58,14 @@ public class TestResource {
             var phoneTyp = PersonBinding.Person.PhoneType.MOBILE;
             PersonBinding.Person.Builder personBuilder =
                     PersonBinding.Person.newBuilder();
-            Optional.ofNullable(name).ifPresent(personBuilder::setName);
-            Optional.ofNullable(id).ifPresent(personBuilder::setId);
-            Optional.ofNullable(email).ifPresent(personBuilder::setEmail);
-            Optional.ofNullable(phone).ifPresent(number -> {
-                    PersonBinding.Person.PhoneNumber.Builder phoneBuilder
-                            = PersonBinding.Person.PhoneNumber.newBuilder();
-                    phoneBuilder.setNumber(number);
-                    Optional.ofNullable(phoneTyp).ifPresent(phoneBuilder::setType);
-                    personBuilder.addPhones(phoneBuilder.build());
-            });
+            personBuilder.setName(name);
+            personBuilder.setId(id);
+            personBuilder.setEmail(email);
+            PersonBinding.Person.PhoneNumber.Builder phoneBuilder
+                    = PersonBinding.Person.PhoneNumber.newBuilder();
+            phoneBuilder.setNumber(phone);
+            phoneBuilder.setType(phoneTyp);
+            personBuilder.addPhones(phoneBuilder.build());
             return Response.ok()
                     .entity(personBuilder.build())
                     .build();
@@ -80,7 +78,7 @@ public class TestResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response createJson(Citizen citizen) {
             logger.info("POST CITIZEN: {}", citizen);
-            return Response.accepted().entity(citizen).build();
+            return Response.status(Response.Status.CREATED).entity(citizen).build();
     }
 
     @POST
@@ -89,6 +87,6 @@ public class TestResource {
     @Produces(MediaTypeExt.APPLICATION_X_PROTOBUF)
     public Response createProto(PersonBinding.Person john) {
         logger.info("POST Person: {}", john);
-        return  Response.accepted().entity(john).build();
+        return  Response.status(Response.Status.CREATED).entity(john).build();
     }
 }
