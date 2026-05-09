@@ -1,34 +1,19 @@
-# REST api custom mime types utilizing JaxRS MessageBodyReaderWriter Specifications
-Demo project to handle REST requests with Multiple MIME Types like json &amp; protobuf in the same API's.
+# Spring MVC JSON + Protobuf Demo
 
-# Sample REST Resource:
-    @GET
-    @Path("/proto")
-    @Produces({MediaType.APPLICATION_JSON, MediaTypeExt.APPLICATION_X_PROTOBUF})
-    public Response testProto()
-    
-    @POST
-    @Path("/proto")
-    @Consumes(MediaTypeExt.APPLICATION_X_PROTOBUF)
-    @Produces(MediaTypeExt.APPLICATION_X_PROTOBUF)
-    public Response createProto(PersonBinding.Person john)
-    
-# Sample Protobuf MessageBodyWriter
+This project demonstrates a Spring MVC API that serves and accepts both JSON and protobuf payloads on the same endpoint family.
 
-    @Provider
-    @Produces(MediaTypeExt.APPLICATION_X_PROTOBUF)
-    public class ProtoMessageWriter implements MessageBodyWriter<PersonBinding.Person> {
-      private final static Logger logger = LoggerFactory.getLogger(ProtoMessageReader.class);
+## Stack
+- Java 25
+- Spring Boot 4
+- Spring MVC
+- Protocol Buffers (`protobuf-java`)
 
-      @Override
-      public boolean isWriteable(Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType) {
-          return aClass == PersonBinding.Person.class;
-      }
+## API behavior
+- `GET /api/test/proto`
+  - `Accept: application/json` returns a JSON `Citizen` payload
+  - `Accept: application/x-protobuf` returns a protobuf `PersonBinding.Person` payload
+- `POST /api/test/proto`
+  - `Content-Type: application/json` accepts and returns JSON
+  - `Content-Type: application/x-protobuf` accepts and returns protobuf
 
-    @Override
-      public void writeTo(PersonBinding.Person person, Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object>      multivaluedMap, OutputStream outputStream) throws IOException, WebApplicationException {
-          multivaluedMap.add(HttpHeaders.CONTENT_LENGTH,person.getSerializedSize());
-          logger.info("Proto Response Size: {}",person.getSerializedSize());
-          person.writeTo(outputStream);
-      }
-    }
+The controller implementation lives in `src/main/java/com/example/demo/resource/TestController.java`.

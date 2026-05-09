@@ -11,13 +11,8 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        // Add ProtobufHttpMessageConverter.
-        // Spring Boot typically auto-configures this if protobuf-java is present.
-        // However, explicitly adding it can help ensure it's prioritized or correctly configured,
-        // especially if there were conflicts or custom media type needs.
-        // The default ProtobufHttpMessageConverter should handle "application/x-protobuf"
-        // and "application/protobuf".
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        // Keep Spring defaults (JSON/String/etc) and add protobuf support.
         converters.add(new ProtobufHttpMessageConverter());
     }
 

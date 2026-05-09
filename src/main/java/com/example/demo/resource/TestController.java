@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/test")
@@ -31,10 +32,10 @@ public class TestController {
         }
     }
 
-    @GetMapping(path = "/proto", produces = { MediaType.APPLICATION_JSON_VALUE, "application/x-protobuf" })
-    public ResponseEntity<?> testProto(@RequestHeader(HttpHeaders.ACCEPT) String acceptHeader) {
+    @GetMapping(path = "/proto")
+    public ResponseEntity<?> testProto(@RequestHeader(value = HttpHeaders.ACCEPT, required = false) String acceptHeader) {
 
-        if (acceptHeader.isEmpty() || MediaType.APPLICATION_JSON_VALUE.equals(acceptHeader)) {
+        if (!acceptsProtobuf(acceptHeader)) {
             Citizen john = new Citizen();
             john.setId(1234567890);
             john.setEmail("john.test@test.com");
@@ -43,7 +44,9 @@ public class TestController {
             phone.setType(PersonBinding.Person.PhoneType.MOBILE);
             phone.setNumber("761-672-7821");
             john.setPhones(Collections.singletonList(phone));
-            return ResponseEntity.ok(john);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(john);
         } else {
             var name = "John Test";
             Integer id = 1234567890;
@@ -60,7 +63,26 @@ public class TestController {
             phoneBuilder.setNumber(phone);
             phoneBuilder.setType(phoneTyp);
             personBuilder.addPhones(phoneBuilder.build());
-            return ResponseEntity.ok(personBuilder.build());
+            return ResponseEntity.ok()
+                    .contentType(MediaType.valueOf("application/x-protobuf"))
+                    .body(personBuilder.build());
+        }
+    }
+
+    private boolean acceptsProtobuf(String acceptHeader) {
+        if (acceptHeader == null || acceptHeader.isBlank()) {
+            return false;
+        }
+        try {
+            List<MediaType> requestedTypes = MediaType.parseMediaTypes(acceptHeader);
+            return requestedTypes.stream()
+                    .map(MediaType::getSubtype)
+                    .filter(subtype -> subtype != null && !subtype.contains("*"))
+                    .map(String::toLowerCase)
+                    .anyMatch(subtype -> subtype.equals("x-protobuf") || subtype.equals("protobuf"));
+        } catch (IllegalArgumentException ex) {
+            logger.debug("Invalid Accept header value, defaulting to JSON: {}", acceptHeader, ex);
+            return false;
         }
     }
 

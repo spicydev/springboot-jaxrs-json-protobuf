@@ -2,10 +2,10 @@ package com.example.demo.resource;
 
 import com.example.demo.resource.model.PersonBinding;
 import com.example.demo.resource.pojo.Citizen;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import; // Added
 import com.example.demo.conf.WebConfig; // Added
 import org.springframework.http.HttpHeaders;
@@ -80,6 +80,32 @@ public class TestControllerTest {
         assertThat(person.getPhonesCount()).isEqualTo(1);
         assertThat(person.getPhones(0).getNumber()).isEqualTo("761-672-7821");
         assertThat(person.getPhones(0).getType()).isEqualTo(PersonBinding.Person.PhoneType.MOBILE);
+    }
+
+    @Test
+    void testGetProto_whenAcceptMissing_shouldDefaultToCitizenJson() throws Exception {
+        mockMvc.perform(get("/api/test/proto"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name").value("John Test"));
+    }
+
+    @Test
+    void testGetProto_whenAcceptWildcard_shouldDefaultToCitizenJson() throws Exception {
+        mockMvc.perform(get("/api/test/proto")
+                        .header(HttpHeaders.ACCEPT, "*/*"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name").value("John Test"));
+    }
+
+    @Test
+    void testGetProto_whenAcceptUnsupported_shouldDefaultToCitizenJson() throws Exception {
+        mockMvc.perform(get("/api/test/proto")
+                        .header(HttpHeaders.ACCEPT, MediaType.TEXT_HTML_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name").value("John Test"));
     }
 
     // Test for /api/test/proto (POST) with JSON content
