@@ -47,7 +47,7 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn -B clean verify
+        run: mvn -B -Dnet.bytebuddy.experimental=true clean verify
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
